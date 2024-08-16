@@ -1,14 +1,13 @@
-# FizzBuzzの課題
+number = 1 
+FIZZ = 3
+BUZZ = 5
 
-number = 1
-fizz = 3
-buzz = 5
-while number <= 20                                   # 1~20までをループ
-  if (number % fizz).zero? && (number % buzz).zero?  # 3と5の倍数
-    puts 'FizzBuzz'
-  elsif (number % fizz).zero?                        # 3の倍数
-    puts 'Fizz'
-  elsif (number % buzz).zero?                        # 5の倍数
+while number <= 20                                   
+  if (number % FIZZ).zero? && (number % BUZZ).zero?  
+    puts  'FizzBuzz'
+  elsif (number % FIZZ).zero?                        
+    puts  'Fizz'
+  elsif (number % BUZZ).zero?                        
     puts 'Buzz'
   else
     puts number
