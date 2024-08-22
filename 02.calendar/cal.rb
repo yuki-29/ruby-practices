@@ -2,15 +2,6 @@
 
 require 'date'
 require 'optparse'
-opt = OptionParser.new
-params= {}
-
-opt.on('-m [MONTH]',Integer){|v| params[:m] = v}
-opt.on('-y [YEAR]',Integer){|v| params[:y] = v}
-opt.parse!(ARGV)
-
-params[:m] = Date.today.month if params[:m].nil?
-params[:y] = Date.today.year if params[:y].nil?
 
 # 2次元配列生成、日付をフォーマット
 def generate_day_list(date)
@@ -40,7 +31,17 @@ def display(date,list)
   puts '日 月 火 水 木 金 土'
   list.each {|i| puts i.join(" ")}
 end
- 
+
+opt = OptionParser.new
+params= {}
+
+opt.on('-m [MONTH]',Integer){|v| params[:m] = v}
+opt.on('-y [YEAR]',Integer){|v| params[:y] = v}
+opt.parse!(ARGV)
+
+params[:m] = Date.today.month if params[:m].nil?
+params[:y] = Date.today.year if params[:y].nil?
+
 date = Date.new(params[:y],params[:m])
 
 display(date,generate_day_list(date))
