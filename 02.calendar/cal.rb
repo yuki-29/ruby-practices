@@ -3,45 +3,44 @@
 require 'date'
 require 'optparse'
 
-# 2次元配列生成、日付をフォーマット
-def generate_day_list(date)
-  weekday = date.wday
-  month_end = Date.new(date.year,date.month,-1).mday
-  indent = Array.new(weekday, "  ")
+def generate_calendar_matrix(first_date)
+  weekday = first_date.wday
+  initial_indent = Array.new(weekday, "  ")
 
-  day_list_row = (1..month_end)
-  day_list = []
-  sub_list = []
-  sub_list.push(indent)
+  first_date = Date.new(first_date.year, first_date.month, 1)
+  last_date = Date.new(first_date.year, first_date.month, -1)
+  calendar_matrix = []
+  dates_in_week = []
+  dates_in_week.push(initial_indent)
 
-  day_list_row.each do |i|
-    if Date.new(date.year,date.month,i).saturday?
-      sub_list.push(i.to_s.rjust(2))
-      day_list.push(sub_list)
-      sub_list = []
+  (first_date..last_date).each do |date|
+    if date.saturday?
+      dates_in_week.push(date.day.to_s.rjust(2))
+      calendar_matrix.push(dates_in_week)
+      dates_in_week = []
     else
-      sub_list.push(i.to_s.rjust(2))
+      dates_in_week.push(date.day.to_s.rjust(2))
     end
   end
-  day_list.push(sub_list) if sub_list.any? 
-  return day_list
+  calendar_matrix.push(dates_in_week) if dates_in_week.any? 
+  calendar_matrix
 end
-def display(date,list)
-  puts "      #{date.month}月 #{date.year}      "
+def calendar_display(display_date, weekly_array)
+  puts "      #{display_date.month}月 #{display_date.year}      "
   puts '日 月 火 水 木 金 土'
-  list.each {|i| puts i.join(" ")}
+  weekly_array.each {|i| puts i.join(" ")}
 end
 
-opt = OptionParser.new
+options = OptionParser.new
 params= {}
 
-opt.on('-m [MONTH]',Integer){|v| params[:m] = v}
-opt.on('-y [YEAR]',Integer){|v| params[:y] = v}
-opt.parse!(ARGV)
+options.on('-m [MONTH]', Integer){|v| params[:m] = v}
+options.on('-y [YEAR]', Integer){|v| params[:y] = v}
+options.parse!(ARGV)
 
 params[:m] = Date.today.month if params[:m].nil?
 params[:y] = Date.today.year if params[:y].nil?
 
-date = Date.new(params[:y],params[:m])
+target_date= Date.new(params[:y], params[:m])
 
-display(date,generate_day_list(date))
+calendar_display(target_date, generate_calendar_matrix(target_date))
