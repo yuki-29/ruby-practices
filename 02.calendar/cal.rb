@@ -6,12 +6,12 @@ require 'optparse'
 def generate_calendar_matrix(first_date)
   weekday = first_date.wday
   initial_indent = Array.new(weekday, "  ")
-
+ 
   first_date = Date.new(first_date.year, first_date.month, 1)
   last_date = Date.new(first_date.year, first_date.month, -1)
   calendar_matrix = []
   dates_in_week = []
-  dates_in_week.push(initial_indent)
+  dates_in_week.push(initial_indent) if initial_indent.any?
 
   (first_date..last_date).each do |date|
     if date.saturday?
@@ -31,16 +31,16 @@ def calendar_display(display_date, weekly_array)
   weekly_array.each {|i| puts i.join(" ")}
 end
 
-options = OptionParser.new
-params= {}
+option_parser = OptionParser.new
+options= {}
 
-options.on('-m [MONTH]', Integer){|v| params[:m] = v}
-options.on('-y [YEAR]', Integer){|v| params[:y] = v}
-options.parse!(ARGV)
+option_parser.on('-m [MONTH]', Integer){|v| options[:m] = v}
+option_parser.on('-y [YEAR]', Integer){|v| options[:y] = v}
+option_parser.parse!(ARGV)
 
-params[:m] = Date.today.month if params[:m].nil?
-params[:y] = Date.today.year if params[:y].nil?
+options[:m] = Date.today.month if options[:m].nil?
+options[:y] = Date.today.year if options[:y].nil?
 
-target_date= Date.new(params[:y], params[:m])
+target_date= Date.new(options[:y], options[:m])
 
 calendar_display(target_date, generate_calendar_matrix(target_date))
