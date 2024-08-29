@@ -14,12 +14,10 @@ def generate_calendar_matrix(first_date)
   dates_in_week.push(initial_indent) if initial_indent.any?
 
   (first_date..last_date).each do |date|
+    dates_in_week.push(date.day.to_s.rjust(2))
     if date.saturday?
-      dates_in_week.push(date.day.to_s.rjust(2))
       calendar_matrix.push(dates_in_week)
       dates_in_week = []
-    else
-      dates_in_week.push(date.day.to_s.rjust(2))
     end
   end
   calendar_matrix.push(dates_in_week) if dates_in_week.any? 
