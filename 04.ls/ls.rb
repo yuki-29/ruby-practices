@@ -1,12 +1,20 @@
 #! /usr/bin/env ruby
 # frozen_string_literal: true
 
+require 'optparse'
+
 NUM_COLUMNS = 3
 HALF_WIDTH_BYTE = 1
 HALF_WIDTH_SPACE = 1
 FULL_WIDTH_SPACE = 2
 
-file_names = Dir.glob('*')
+options = ARGV.getopts('a')
+
+file_names = if options['a']
+               Dir.glob('{.*,*}')
+             else
+               Dir.glob('*')
+             end
 
 exit if file_names.empty?
 
@@ -46,5 +54,5 @@ file_list_in_space.each_slice(row_count) do |i|
 end
 
 (file_matrix[0]).zip(*file_matrix[1..]) do |file_name|
-  puts file_name.join('   ')
+  puts file_name.join('      ')
 end
