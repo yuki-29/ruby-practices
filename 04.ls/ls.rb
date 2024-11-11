@@ -11,7 +11,7 @@ FULL_WIDTH_SPACE = 2
 options = ARGV.getopts('a')
 
 file_names = if options['a']
-               Dir.glob('{.*,*}')
+               Dir.glob('*', File::FNM_DOTMATCH)
              else
                Dir.glob('*')
              end
