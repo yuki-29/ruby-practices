@@ -10,11 +10,8 @@ FULL_WIDTH_SPACE = 2
 
 options = ARGV.getopts('a')
 
-file_names = if options['a']
-               Dir.glob('*', File::FNM_DOTMATCH)
-             else
-               Dir.glob('*')
-             end
+flags = options['a'] ? File::FNM_DOTMATCH : 0
+file_names = Dir.glob('*', flags)
 
 exit if file_names.empty?
 
