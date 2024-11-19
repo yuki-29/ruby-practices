@@ -8,10 +8,9 @@ HALF_WIDTH_BYTE = 1
 HALF_WIDTH_SPACE = 1
 FULL_WIDTH_SPACE = 2
 
-options = ARGV.getopts('a')
-
-flags = options['a'] ? File::FNM_DOTMATCH : 0
-file_names = Dir.glob('*', flags)
+options = ARGV.getopts('r')
+files = Dir.glob('*')
+file_names = options['r'] ? files.reverse : files
 
 exit if file_names.empty?
 
