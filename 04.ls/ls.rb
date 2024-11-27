@@ -67,13 +67,13 @@ if options['l']
     fs = File.lstat(file_name)
     file_info = { name: file_name,
                   blocks: fs.blocks,
-                  ftype: fs.ftype[0].sub(/f/, '-'),
+                  ftype: fs.ftype[0].tr('f', '-'),
                   mode: fs.mode.to_s(8)[-3, 3],
                   nlink: fs.nlink,
                   owner: Etc.getpwuid(fs.uid).name,
                   group: Etc.getgrgid(fs.gid).name,
                   size: fs.size,
-                  mtime: fs.mtime.to_s[5, 11].sub(/-/, ' ') }
+                  mtime: fs.mtime.to_s[5, 11].tr('-', ' ') }
 
     total_blocks += file_info[:blocks]
 
