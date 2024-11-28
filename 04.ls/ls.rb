@@ -46,15 +46,16 @@ end
 def format_file_info(file_info, link_path)
   [
     file_info[:ftype] + permission_type(file_info[:mode]),
-    " #{file_info[:nlink]}",
+    " #{file_info[:nlink].to_s.rjust(2)}",
     "#{file_info[:owner]}  #{file_info[:group]}",
     " #{file_info[:size].to_s.rjust(4)}",
     "#{file_info[:mtime]} #{file_info[:name]}#{link_path}"
   ]
 end
 
-options = ARGV.getopts('l')
-file_names = Dir.glob('*')
+options = ARGV.getopts('a', 'r', 'l')
+dotmatch_files = Dir.glob('*', options['a'] ? File::FNM_DOTMATCH : 0)
+file_names = options['r'] ? dotmatch_files.reverse : dotmatch_files
 
 exit if file_names.empty?
 
