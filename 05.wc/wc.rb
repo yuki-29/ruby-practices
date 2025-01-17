@@ -5,11 +5,22 @@ require 'optparse'
 
 COLUMN_WIDTH = 8
 
+def load_options
+  options = ARGV.getopts('l', 'w', 'c')
+  options = options.transform_values { true } if options.values.none?
+  options
+end
+
+def file_summary_hash(file)
+  file_text = read_input(file)
+  build_file_stats_hash(file_text)
+end
+
 def read_input(filename)
   filename.empty? ? $stdin.read : File.read(filename)
 end
 
-def build_file_stats(input_text)
+def build_file_stats_hash(input_text)
   {
     lines: input_text.lines.count,
     words: count_words(input_text.lines),
@@ -27,16 +38,25 @@ def format_with_padding(text)
 end
 
 def calculate_total(stats_list, stats_key)
-  stats_list.sum { |i| i[stats_key] }
+  stats_list.sum { |key_value| key_value[stats_key] }
 end
 
 def format_summary(file_stats, file_name, options)
-  summary_line = []
-  summary_line << format_with_padding(file_stats[:lines]) if options['l']
-  summary_line << format_with_padding(file_stats[:words]) if options['w']
-  summary_line << format_with_padding(file_stats[:bytes]) if options['c']
-  summary_line << " #{file_name}"
-  summary_line
+  [
+    options['l'] ? format_with_padding(file_stats[:lines]) : nil,
+    options['w'] ? format_with_padding(file_stats[:words]) : nil,
+    options['c'] ? format_with_padding(file_stats[:bytes]) : nil,
+    " #{file_name}"
+  ]
+end
+
+def format_totals(file_stats_list, options)
+  [
+    options['l'] ? format_with_padding(calculate_total(file_stats_list, :lines)) : nil,
+    options['w'] ? format_with_padding(calculate_total(file_stats_list, :words)) : nil,
+    options['c'] ? format_with_padding(calculate_total(file_stats_list, :bytes)) : nil,
+    ' total'
+  ]
 end
 
 def display_summaries(summary_lines)
@@ -45,13 +65,7 @@ def display_summaries(summary_lines)
   end
 end
 
-options = ARGV.getopts('l', 'w', 'c')
-
-if options.values.none?
-  options['l'] = true
-  options['w'] = true
-  options['c'] = true
-end
+options = load_options
 
 formatted_summaries = []
 file_stats_list = []
@@ -59,21 +73,10 @@ file_stats_list = []
 file_names = ARGV.empty? ? [''] : ARGV
 
 file_names.each do |file|
-  file_text = read_input(file)
-  current_file_stats = build_file_stats(file_text)
-  summary_line = format_summary(current_file_stats, file, options)
-
-  formatted_summaries << summary_line
-  file_stats_list << current_file_stats
+  file_stats_list << file_summary = file_summary_hash(file)
+  formatted_summaries << format_summary(file_summary, file, options)
 end
 
-if file_names.size > 1
-  totals = []
-  totals << format_with_padding(calculate_total(file_stats_list, :lines)) if options['l']
-  totals << format_with_padding(calculate_total(file_stats_list, :words)) if options['w']
-  totals << format_with_padding(calculate_total(file_stats_list, :bytes)) if options['c']
-  totals << ' total'
-  formatted_summaries << totals
-end
+formatted_summaries << format_totals(file_stats_list, options) if file_names.size > 1
 
 display_summaries(formatted_summaries)
