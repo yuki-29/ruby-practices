@@ -7,9 +7,9 @@ class Game
 
   def initialize(scores)
     scores = scores.split(',')
-    @game = []
+    @frames = []
     10.times do |i|
-      @game << if i == 9
+      @frames << if i == 9
                  Frame.new(*scores, last: true)
                elsif scores.first == 'X'
                  Frame.new(*scores.shift)
@@ -18,12 +18,12 @@ class Game
                end
     end
 
-    @game.each_with_index do |frame, i|
-      frame.next_frame = @game[i + 1]
+    @frames.each_with_index do |frame, i|
+      frame.next_frame = @frames[i + 1]
     end
   end
 
   def total
-    @game.sum(&:frame_score_calc)
+    @frames.sum(&:frame_score_calc)
   end
 end
