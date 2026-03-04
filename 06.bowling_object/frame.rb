@@ -24,12 +24,10 @@ class Frame
     end
 
   def provide_bonus_score
-    if next_frame.nil?
+    if !next_frame || !strike?
       two_shot_score
-    elsif strike?
-      10 + next_frame.first_shot_score
     else
-      two_shot_score
+      10 + next_frame.first_shot_score
     end
   end
 
@@ -55,11 +53,7 @@ class Frame
   end
 
   def strike_bonus
-    if !next_frame.nil?
-      next_frame.provide_bonus_score
-    else
-      two_shot_score
-    end
+    next_frame.provide_bonus_score
   end
 
   def spare_bonus
