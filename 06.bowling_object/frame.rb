@@ -14,14 +14,15 @@ class Frame
 
   def frame_score_calc
     return score if last?
-      if strike?
-        10 + strike_bonus
-      elsif spare?
-        10 + spare_bonus
-      else
-        two_shot_score
-      end
+
+    if strike?
+      10 + strike_bonus
+    elsif spare?
+      10 + spare_bonus
+    else
+      two_shot_score
     end
+  end
 
   def provide_bonus_score
     if !next_frame || !strike?
