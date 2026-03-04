@@ -12,6 +12,33 @@ class Frame
     @last_frame = last
   end
 
+  def frame_score_calc
+    return score if last?
+      if strike?
+        10 + strike_bonus
+      elsif spare?
+        10 + spare_bonus
+      else
+        two_shot_score
+      end
+    end
+
+  def provide_bonus_score
+    if next_frame.nil?
+      two_shot_score
+    elsif strike?
+      10 + next_frame.first_shot_score
+    else
+      two_shot_score
+    end
+  end
+
+  def first_shot_score
+    @first_shot.score
+  end
+
+  private
+
   def last?
     @last_frame
   end
@@ -27,18 +54,6 @@ class Frame
      @second_shot.score].sum
   end
 
-  def frame_score_calc
-    return score if last?
-
-    if strike?
-      10 + strike_bonus
-    elsif spare?
-      10 + spare_bonus
-    else
-      two_shot_score
-    end
-  end
-
   def strike_bonus
     if !next_frame.nil?
       next_frame.provide_bonus_score
@@ -47,22 +62,8 @@ class Frame
     end
   end
 
-  def provide_bonus_score
-    if next_frame.nil?
-      two_shot_score
-    elsif strike?
-      10 + next_frame.first_shot_score
-    else
-      two_shot_score
-    end
-  end
-
   def spare_bonus
     next_frame.first_shot_score
-  end
-
-  def first_shot_score
-    @first_shot.score
   end
 
   def strike?
