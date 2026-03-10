@@ -3,4 +3,4 @@
 require_relative 'game'
 
 frames = Game.new(ARGV[0])
-p frames.total
+puts frames.total
