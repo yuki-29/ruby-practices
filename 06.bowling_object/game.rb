@@ -5,15 +5,15 @@ require_relative 'shot'
 
 class Game
   def initialize(scores)
-    scores = scores.split(',')
+    shots = scores.split(',').map { |score| Shot.new(score) }
+
     @frames = Array.new(10) do |i|
-      shot = Shot.new(scores.first)
       if i == 9
-        Frame.new(*scores, last: true)
-      elsif shot.strike?
-        Frame.new(*scores.shift, frame_count: i)
+        Frame.new(shots, last: true)
+      elsif shots.first.strike?
+        Frame.new([shots.shift], frame_count: i)
       else
-        Frame.new(*scores.shift(2), frame_count: i)
+        Frame.new(shots.shift(2), frame_count: i)
       end
     end
   end

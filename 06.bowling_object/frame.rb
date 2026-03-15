@@ -3,11 +3,10 @@
 require_relative 'shot'
 
 class Frame
-  def initialize(first_mark, second_mark = nil, third_mark = nil, frame_count: nil, last: false)
-    @shots = []
-    @shots[0] = Shot.new(first_mark)
-    @shots[1] = Shot.new(second_mark)
-    @shots[2] = Shot.new(third_mark)
+  def initialize(marks, frame_count: nil, last: false)
+    @shots = Array.new(3) do |i|
+      marks[i] || Shot.new(nil)
+    end
     @frame_count = frame_count
     @last = last
   end
@@ -28,32 +27,34 @@ class Frame
 
   protected
 
-  def last?
-    @last
-  end
-
-  def score
-    @shots.sum(&:score)
-  end
-
-  def first_shot_score
-    @shots[0].score
-  end
-
-  def two_shot_score
-    @shots.first(2).sum(&:score)
-  end
-
-  def strike_bonus(next_frame, second_next_frame)
-    next_frame.provide_bonus_score(second_next_frame)
-  end
-
   def provide_bonus_score(second_next_frame)
     if strike? && second_next_frame
       10 + second_next_frame.first_shot_score
     else
       two_shot_score
     end
+  end
+
+  def first_shot_score
+    @shots[0].score
+  end
+
+  private
+
+  def score
+    @shots.sum(&:score)
+  end
+
+  def two_shot_score
+    @shots.first(2).sum(&:score)
+  end
+
+  def last?
+    @last
+  end
+
+  def strike_bonus(next_frame, second_next_frame)
+    next_frame.provide_bonus_score(second_next_frame)
   end
 
   def spare_bonus(next_frame)
@@ -65,6 +66,6 @@ class Frame
   end
 
   def spare?
-    two_shot_score == 10
+    !strike? && two_shot_score == 10
   end
 end
