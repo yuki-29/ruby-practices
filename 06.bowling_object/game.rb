@@ -10,10 +10,9 @@ class Game
     @frames = Array.new(10) do |i|
       if i == 9
         Frame.new(shots, last: true)
-      elsif shots.first.strike?
-        Frame.new([shots.shift], frame_count: i)
       else
-        Frame.new(shots.shift(2), frame_count: i)
+        length = shots[0].strike? ? 1 : 2
+        Frame.new(shots.shift(length), frame_count: i)
       end
     end
   end

@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 
 require_relative 'shot'
+require 'debug'
 
 class Frame
-  def initialize(marks, frame_count: nil, last: false)
-    @shots = Array.new(3) do |i|
-      marks[i] || Shot.new(nil)
-    end
+  def initialize(shots, frame_count: nil, last: false)
+    @shots = shots
     @frame_count = frame_count
     @last = last
   end
@@ -42,11 +41,11 @@ class Frame
   private
 
   def score
-    @shots.sum(&:score)
+    @shots.compact.sum(&:score)
   end
 
   def two_shot_score
-    @shots.first(2).sum(&:score)
+    @shots.compact.first(2).sum(&:score)
   end
 
   def last?
