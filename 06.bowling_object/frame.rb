@@ -40,11 +40,11 @@ class Frame
   private
 
   def score
-    @shots.compact.sum(&:score)
+    @shots.sum(&:score)
   end
 
   def two_shot_score
-    @shots.compact.first(2).sum(&:score)
+    @shots.first(2).sum(&:score)
   end
 
   def last?
