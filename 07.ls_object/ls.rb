@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
-require_relative 'formatter'
+require_relative 'lscommand'
 
-puts Formatter.new(Dir.glob('*')).formatted_files
+puts LsCommand.new.display
