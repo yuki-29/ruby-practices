@@ -3,6 +3,8 @@
 require 'etc'
 
 class FileItem
+  attr_reader :file_name
+
   HALF_WIDTH_BYTE = 1
   HALF_WIDTH = 1
   FULL_WIDTH = 2
@@ -39,20 +41,32 @@ class FileItem
     @fs.blocks
   end
 
-  def to_h
-    {
-      name: @file_name,
-      ftype: @fs.ftype[0].tr('f', '-'),
-      nlink: @fs.nlink,
-      owner: Etc.getpwuid(@fs.uid).name,
-      group: Etc.getgrgid(@fs.gid).name,
-      size: @fs.size,
-      mtime: @fs.mtime.strftime('%-m月 %e %H:%M')
-    }
+  def ftype
+    @fs.ftype[0].tr('f', '-')
+  end
+
+  def nlink
+    @fs.nlink
+  end
+
+  def owner
+    Etc.getpwuid(@fs.uid).name
+  end
+
+  def group
+    Etc.getgrgid(@fs.gid).name
+  end
+
+  def size
+    @fs.size
+  end
+
+  def mtime
+    @fs.mtime.strftime('%-m月 %e %H:%M')
   end
 
   def link_path
-    " -> #{File.readlink(@file_name)}" if @fs.ftype == 'link'
+    File.readlink(@file_name) if @fs.ftype == 'link'
   end
 
   def permission_type

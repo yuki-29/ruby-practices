@@ -7,7 +7,7 @@ class Formatter
     @file_items = file_names.map { |file| FileItem.new(file) }
   end
 
-  def formatted_files
+  def format
     raise NotImplementedError
   end
 end

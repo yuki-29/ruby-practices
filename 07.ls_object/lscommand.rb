@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative 'longformatter'
-require_relative 'shortformatter'
+require_relative 'long_formatter'
+require_relative 'short_formatter'
 require 'optparse'
 
 class LsCommand
@@ -11,7 +11,7 @@ class LsCommand
   end
 
   def display
-    @formatter.formatted_files
+    @formatter.format
   end
 
   private
