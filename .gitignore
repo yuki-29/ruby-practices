@@ -68,6 +68,9 @@ build-iPhoneSimulator/
 .AppleDouble
 .LSOverride
 
+# Userfile
+.test.rb
+
 # Icon must end with two \r
 Icon
 
