@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'fileitem'
+require_relative 'file_item'
 
 class Formatter
   def initialize(file_names)

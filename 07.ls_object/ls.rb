@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
-require_relative 'lscommand'
+require_relative 'ls_command'
 
 puts LsCommand.new.display
